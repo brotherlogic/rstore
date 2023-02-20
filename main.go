@@ -23,7 +23,7 @@ func main() {
 
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
 	if err != nil {
-		log.Fatalf("failed to listen on the port %v: %v", *port, err)
+		log.Fatalf("failed to listen on the serving port %v: %v", *port, err)
 	}
 	gs := grpc.NewServer()
 	log.Printf("rstore listening at %v", lis.Addr())
