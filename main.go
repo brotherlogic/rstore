@@ -23,10 +23,10 @@ func main() {
 
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
 	if err != nil {
-		log.Fatalf("failed to listen on the serving port %v: %v", *port, err)
+		log.Fatalf("rstore failed to listen on the serving port %v: %v", *port, err)
 	}
 	gs := grpc.NewServer()
-	log.Printf("rstore listening at %v", lis.Addr())
+	log.Printf("rstore listening on %v", lis.Addr())
 
 	// Setup prometheus export
 	http.Handle("/metrics", promhttp.Handler())
@@ -35,6 +35,6 @@ func main() {
 	}()
 
 	if err := gs.Serve(lis); err != nil {
-		log.Fatalf("failed to serve: %v", err)
+		log.Fatalf("rstore failed to serve: %v", err)
 	}
 }
