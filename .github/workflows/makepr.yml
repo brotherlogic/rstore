@@ -1,4 +1,4 @@
-name: Create pull request
+name: Create a pull request
 on:
   push:
 jobs:
