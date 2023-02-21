@@ -1,12 +1,15 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
 	"log"
 	"net"
 	"net/http"
 	"time"
+
+	pb "github.com/brotherlogic/rstore/proto"
 
 	"github.com/brotherlogic/goserver/utils"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -22,6 +25,14 @@ var (
 
 type Server struct {
 	rdb *redis.Client
+}
+
+func (s *Server) Read(ctx context.Context, req *pb.ReadRequest) (*pb.ReadResponse, error) {
+	return nil, fmt.Errorf("Not implemented")
+}
+
+func (s *Server) Write(ctx context.Context, req *pb.WriteRequest) (*pb.WriteResponse, error) {
+	return nil, fmt.Errorf("Not implemented")
 }
 
 func main() {
@@ -46,6 +57,7 @@ func main() {
 		log.Fatalf("rstore failed to listen on the serving port %v: %v", *port, err)
 	}
 	gs := grpc.NewServer()
+	pb.RegisterRStoreServiceServer(gs, s)
 	log.Printf("rstore is listening on %v", lis.Addr())
 
 	// Setup prometheus export

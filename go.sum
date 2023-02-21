@@ -44,6 +44,8 @@ github.com/beorn7/perks v1.0.1 h1:VlbKKnNfV8bJzeqoa4cOKqO6bYr3WgKZxO8Z16+hsOM=
 github.com/beorn7/perks v1.0.1/go.mod h1:G2ZrVWU2WbWT9wwq4/hrbKbnv/1ERSJQ0ibhJ6rlkpw=
 github.com/brotherlogic/discovery v0.0.0-20230220192452-aa3448564fd0 h1:CTnrE+YIXcCRQaUyKBD4TZLjJ4EFKAQvvd/trtMoiwk=
 github.com/brotherlogic/discovery v0.0.0-20230220192452-aa3448564fd0/go.mod h1:mRfExHb/XLoYnWd2X0lmuo62qxCHRfWdItW5Ll4PhUs=
+github.com/brotherlogic/discovery v0.0.0-20230221170523-56bd99b0456c h1:ffbbC8wLZ8ezTR3sp423pLaPRxFrMQwXlzqN6EkFe84=
+github.com/brotherlogic/discovery v0.0.0-20230221170523-56bd99b0456c/go.mod h1:HUHEiSJEzsNj9t0psGqwaunsof/0c2LHrZx1r2kBwnA=
 github.com/brotherlogic/goserver v0.0.0-20230208171911-c95aab060a3f h1:cS0kuScVGRpGQkVb9YN2W8kRGpEX9Nr6ktRd87g7iCE=
 github.com/brotherlogic/goserver v0.0.0-20230208171911-c95aab060a3f/go.mod h1:S22R1E9LVceteoyVIRrcekAcnSmADsdMSF7XgCuteHU=
 github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=
@@ -468,6 +470,8 @@ google.golang.org/genproto v0.0.0-20230110181048-76db0878b65f h1:BWUVssLB0HVOSY7
 google.golang.org/genproto v0.0.0-20230110181048-76db0878b65f/go.mod h1:RGgjbofJ8xD9Sq1VVhDM1Vok1vRONV+rg+CjzG4SZKM=
 google.golang.org/genproto v0.0.0-20230216225411-c8e22ba71e44 h1:EfLuoKW5WfkgVdDy7dTK8qSbH37AX5mj/MFh+bGPz14=
 google.golang.org/genproto v0.0.0-20230216225411-c8e22ba71e44/go.mod h1:8B0gmkoRebU8ukX6HP+4wrVQUY1+6PkQ44BSyIlflHA=
+google.golang.org/genproto v0.0.0-20230221151758-ace64dc21148 h1:muK+gVBJBfFb4SejshDBlN2/UgxCCOKH9Y34ljqEGOc=
+google.golang.org/genproto v0.0.0-20230221151758-ace64dc21148/go.mod h1:3Dl5ZL0q0isWJt+FVcfpQyirqemEuLAK/iFvg1UP1Hw=
 google.golang.org/grpc v1.19.0/go.mod h1:mqu4LbDTu4XGKhr4mRzUsmM4RtVoemTSY81AxZiDr8c=
 google.golang.org/grpc v1.20.1/go.mod h1:10oTOabMzJvdu6/UiuZezV6QK5dSlG84ov/aaiqXj38=
 google.golang.org/grpc v1.21.1/go.mod h1:oYelfM1adQP15Ek0mdvEgi9Df8B9CZIaU1084ijfRaM=
