@@ -11,7 +11,7 @@ require (
 
 require (
 	github.com/beorn7/perks v1.0.1 // indirect
-	github.com/brotherlogic/discovery v0.0.0-20230220192452-aa3448564fd0 // indirect
+	github.com/brotherlogic/discovery v0.0.0-20230221170523-56bd99b0456c // indirect
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/go-logr/logr v1.2.3 // indirect
@@ -31,6 +31,6 @@ require (
 	golang.org/x/net v0.7.0 // indirect
 	golang.org/x/sys v0.5.0 // indirect
 	golang.org/x/text v0.7.0 // indirect
-	google.golang.org/genproto v0.0.0-20230216225411-c8e22ba71e44 // indirect
+	google.golang.org/genproto v0.0.0-20230221151758-ace64dc21148 // indirect
 	google.golang.org/protobuf v1.28.1 // indirect
 )
