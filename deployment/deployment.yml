@@ -39,7 +39,7 @@ spec:
       interval: 30s
   namespaceSelector:
     matchNames:
-    - rstore
+      - rstore
   selector:
     matchLabels:
       app: rstore
@@ -61,7 +61,7 @@ spec:
     spec:
       containers:
       - name: restore
-        image: registry.brotherlogic-backend.com/brotherlogic/rstore:0.47.0 # {"$imagepolicy": "flux-system:rstore"}
+        image: registry.brotherlogic-backend.com/brotherlogic/rstore:0.5.0 # {"$imagepolicy": "flux-system:rstore"}
         ports:
         - containerPort: 8080
       imagePullSecrets:
