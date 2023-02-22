@@ -35,7 +35,9 @@ func (s *Server) Read(ctx context.Context, req *pb.ReadRequest) (*pb.ReadRespons
 }
 
 func (s *Server) Write(ctx context.Context, req *pb.WriteRequest) (*pb.WriteResponse, error) {
-	return nil, fmt.Errorf("Not implemented")
+	err := s.rdb.Set(ctx, req.GetKey(), req.GetValue().GetValue(), 0).Err()
+
+	return &pb.WriteResponse{}, err
 }
 
 func main() {
