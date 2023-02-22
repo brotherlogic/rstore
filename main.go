@@ -15,6 +15,7 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/redis/go-redis/v9"
 	"google.golang.org/grpc"
+	"google.golang.org/protobuf/types/known/anypb"
 )
 
 var (
@@ -28,7 +29,9 @@ type Server struct {
 }
 
 func (s *Server) Read(ctx context.Context, req *pb.ReadRequest) (*pb.ReadResponse, error) {
-	return nil, fmt.Errorf("Not implemented")
+	cmd := s.rdb.Get(ctx, req.GetKey())
+	result, err := cmd.Bytes()
+	return &pb.ReadResponse{Value: &anypb.Any{Value: result}}, err
 }
 
 func (s *Server) Write(ctx context.Context, req *pb.WriteRequest) (*pb.WriteResponse, error) {
