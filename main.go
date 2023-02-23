@@ -46,8 +46,8 @@ func main() {
 	s := &Server{}
 	s.rdb = redis.NewClient(&redis.Options{
 		Addr:     *redisAddress,
-		Password: "", // no password set
-		DB:       0,  // use default DB
+		Password: "",
+		DB:       0,
 	})
 
 	ctx, cancel := utils.ManualContext("redis", time.Minute)
