@@ -36,6 +36,7 @@ jobs:
         name: Build and push
         uses: docker/build-push-action@v3
         with:
+          context: .
           push: true
           builder: ${{ steps.buildx.outputs.name }}
           tags: "${{ secrets.REGISTRY_URL }}/${{ steps.meta.outputs.tags }}"
