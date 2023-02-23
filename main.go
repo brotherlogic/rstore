@@ -40,6 +40,8 @@ func (s *Server) Write(ctx context.Context, req *pb.WriteRequest) (*pb.WriteResp
 	return &pb.WriteResponse{}, err
 }
 
+func (s *Server) GetKeys(ctx context)
+
 func main() {
 	flag.Parse()
 

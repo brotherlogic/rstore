@@ -24,8 +24,17 @@ message WriteResponse {
   int64 timestamp = 2;
 }
 
+message GetKeysRequest {
+  string suffix = 1;
+}
+
+message GetKeysResponse {
+  repeated string keys = 1;
+}
+
 
 service RStoreService {
   rpc Read (ReadRequest) returns (ReadResponse) {};
   rpc Write (WriteRequest) returns (WriteResponse) {};
+  rpc GetKeys (GetKeysRequest) returns (GetKeysResponse) {};
 }
