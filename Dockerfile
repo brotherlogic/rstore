@@ -8,7 +8,7 @@ COPY go.mod ./
 COPY go.sum ./
 
 RUN mkdir proto
-#COPY proto/*.go ./proto/
+COPY proto/*.go ./proto/
 
 RUN mkdir server
 #COPY server/*.go ./server/
