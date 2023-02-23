@@ -24,6 +24,7 @@ const _ = grpc.SupportPackageIsVersion7
 type RStoreServiceClient interface {
 	Read(ctx context.Context, in *ReadRequest, opts ...grpc.CallOption) (*ReadResponse, error)
 	Write(ctx context.Context, in *WriteRequest, opts ...grpc.CallOption) (*WriteResponse, error)
+	GetKeys(ctx context.Context, in *GetKeysRequest, opts ...grpc.CallOption) (*GetKeysResponse, error)
 }
 
 type rStoreServiceClient struct {
@@ -52,12 +53,22 @@ func (c *rStoreServiceClient) Write(ctx context.Context, in *WriteRequest, opts 
 	return out, nil
 }
 
+func (c *rStoreServiceClient) GetKeys(ctx context.Context, in *GetKeysRequest, opts ...grpc.CallOption) (*GetKeysResponse, error) {
+	out := new(GetKeysResponse)
+	err := c.cc.Invoke(ctx, "/rstore.RStoreService/GetKeys", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // RStoreServiceServer is the server API for RStoreService service.
 // All implementations should embed UnimplementedRStoreServiceServer
 // for forward compatibility
 type RStoreServiceServer interface {
 	Read(context.Context, *ReadRequest) (*ReadResponse, error)
 	Write(context.Context, *WriteRequest) (*WriteResponse, error)
+	GetKeys(context.Context, *GetKeysRequest) (*GetKeysResponse, error)
 }
 
 // UnimplementedRStoreServiceServer should be embedded to have forward compatible implementations.
@@ -69,6 +80,9 @@ func (UnimplementedRStoreServiceServer) Read(context.Context, *ReadRequest) (*Re
 }
 func (UnimplementedRStoreServiceServer) Write(context.Context, *WriteRequest) (*WriteResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Write not implemented")
+}
+func (UnimplementedRStoreServiceServer) GetKeys(context.Context, *GetKeysRequest) (*GetKeysResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetKeys not implemented")
 }
 
 // UnsafeRStoreServiceServer may be embedded to opt out of forward compatibility for this service.
@@ -118,6 +132,24 @@ func _RStoreService_Write_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
+func _RStoreService_GetKeys_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetKeysRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RStoreServiceServer).GetKeys(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/rstore.RStoreService/GetKeys",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RStoreServiceServer).GetKeys(ctx, req.(*GetKeysRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // RStoreService_ServiceDesc is the grpc.ServiceDesc for RStoreService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -132,6 +164,10 @@ var RStoreService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Write",
 			Handler:    _RStoreService_Write_Handler,
+		},
+		{
+			MethodName: "GetKeys",
+			Handler:    _RStoreService_GetKeys_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
