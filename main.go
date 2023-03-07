@@ -15,6 +15,8 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/redis/go-redis/v9"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/anypb"
 )
 
@@ -31,6 +33,11 @@ type Server struct {
 func (s *Server) Read(ctx context.Context, req *pb.ReadRequest) (*pb.ReadResponse, error) {
 	cmd := s.rdb.Get(ctx, req.GetKey())
 	result, err := cmd.Bytes()
+
+	if err == redis.Nil {
+		return nil, status.Errorf(codes.NotFound, "%v was not found", req.GetKey())
+	}
+
 	return &pb.ReadResponse{Value: &anypb.Any{Value: result}}, err
 }
 

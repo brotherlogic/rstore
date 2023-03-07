@@ -5,6 +5,8 @@ github.com/beorn7/perks v1.0.1 h1:VlbKKnNfV8bJzeqoa4cOKqO6bYr3WgKZxO8Z16+hsOM=
 github.com/beorn7/perks v1.0.1/go.mod h1:G2ZrVWU2WbWT9wwq4/hrbKbnv/1ERSJQ0ibhJ6rlkpw=
 github.com/brotherlogic/discovery v0.0.0-20230221170523-56bd99b0456c h1:ffbbC8wLZ8ezTR3sp423pLaPRxFrMQwXlzqN6EkFe84=
 github.com/brotherlogic/discovery v0.0.0-20230221170523-56bd99b0456c/go.mod h1:HUHEiSJEzsNj9t0psGqwaunsof/0c2LHrZx1r2kBwnA=
+github.com/brotherlogic/discovery v0.0.0-20230221235228-2800d6e5fd10 h1:nFXNLV5/KM9mng5Hv6IFYVF76xlvkNjrBOCAcUFdlak=
+github.com/brotherlogic/discovery v0.0.0-20230221235228-2800d6e5fd10/go.mod h1:HUHEiSJEzsNj9t0psGqwaunsof/0c2LHrZx1r2kBwnA=
 github.com/brotherlogic/godiscogs v0.0.0-20230104162206-2759618e526a h1:IfshVkQX4s3zpzbQXJT5w/6llAM7dcmT53UqDFu/L3Q=
 github.com/brotherlogic/goserver v0.0.0-20230208171911-c95aab060a3f h1:cS0kuScVGRpGQkVb9YN2W8kRGpEX9Nr6ktRd87g7iCE=
 github.com/brotherlogic/goserver v0.0.0-20230208171911-c95aab060a3f/go.mod h1:S22R1E9LVceteoyVIRrcekAcnSmADsdMSF7XgCuteHU=
@@ -75,6 +77,8 @@ golang.org/x/xerrors v0.0.0-20191204190536-9bdfabe68543/go.mod h1:I/5z698sn9Ka8T
 google.golang.org/appengine v1.6.7 h1:FZR1q0exgwxzPzp/aF+VccGrSfxfPpkBqjIIEq3ru6c=
 google.golang.org/genproto v0.0.0-20230221151758-ace64dc21148 h1:muK+gVBJBfFb4SejshDBlN2/UgxCCOKH9Y34ljqEGOc=
 google.golang.org/genproto v0.0.0-20230221151758-ace64dc21148/go.mod h1:3Dl5ZL0q0isWJt+FVcfpQyirqemEuLAK/iFvg1UP1Hw=
+google.golang.org/genproto v0.0.0-20230222225845-10f96fb3dbec h1:6rwgChOSUfpzJF2/KnLgo+gMaxGpujStSkPWrbhXArU=
+google.golang.org/genproto v0.0.0-20230222225845-10f96fb3dbec/go.mod h1:3Dl5ZL0q0isWJt+FVcfpQyirqemEuLAK/iFvg1UP1Hw=
 google.golang.org/grpc v1.53.0 h1:LAv2ds7cmFV/XTS3XG1NneeENYrXGmorPxsBbptIjNc=
 google.golang.org/grpc v1.53.0/go.mod h1:OnIrk0ipVdj4N5d9IUoFUx72/VlD7+jUsHwZgwSMQpw=
 google.golang.org/protobuf v1.26.0-rc.1/go.mod h1:jlhhOSvTdKEhbULTjvd4ARK9grFBp09yW+WbY/TyQbw=
