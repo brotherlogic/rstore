@@ -35,7 +35,7 @@ func (s *Server) Read(ctx context.Context, req *pb.ReadRequest) (*pb.ReadRespons
 	result, err := cmd.Bytes()
 
 	if err == redis.Nil {
-		return nil, status.Errorf(codes.NotFound, "%v was not found", req.GetKey())
+		return nil, status.Errorf(codes.NotFound, "key %v was not found", req.GetKey())
 	}
 
 	return &pb.ReadResponse{Value: &anypb.Any{Value: result}}, err
