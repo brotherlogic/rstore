@@ -38,12 +38,17 @@ func (s *Server) Read(ctx context.Context, req *pb.ReadRequest) (*pb.ReadRespons
 		return nil, status.Errorf(codes.NotFound, "key %v was not found", req.GetKey())
 	}
 
+	if err != nil {
+		log.Printf("RESDIS Error on Read: %v", err)
+	}
 	return &pb.ReadResponse{Value: &anypb.Any{Value: result}}, err
 }
 
 func (s *Server) Write(ctx context.Context, req *pb.WriteRequest) (*pb.WriteResponse, error) {
 	err := s.rdb.Set(ctx, req.GetKey(), req.GetValue().GetValue(), 0).Err()
-
+	if err != nil {
+		log.Printf("REDIS ERROR on Write: %v", err)
+	}
 	return &pb.WriteResponse{}, err
 }
 
