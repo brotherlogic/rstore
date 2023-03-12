@@ -39,7 +39,7 @@ func (s *Server) Read(ctx context.Context, req *pb.ReadRequest) (*pb.ReadRespons
 	}
 
 	if err != nil {
-		log.Printf("RESDIS Error on Read: %v", err)
+		log.Printf("REDIS ERROR on Read: %v", err)
 	}
 	return &pb.ReadResponse{Value: &anypb.Any{Value: result}}, err
 }
