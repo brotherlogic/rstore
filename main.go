@@ -39,7 +39,7 @@ func (s *Server) Read(ctx context.Context, req *pb.ReadRequest) (*pb.ReadRespons
 	}
 
 	if err != nil {
-		log.Printf("remote err on Read: %v", err)
+		log.Printf("remote err on read: %v", err)
 	}
 	return &pb.ReadResponse{Value: &anypb.Any{Value: result}}, err
 }
@@ -47,7 +47,7 @@ func (s *Server) Read(ctx context.Context, req *pb.ReadRequest) (*pb.ReadRespons
 func (s *Server) Write(ctx context.Context, req *pb.WriteRequest) (*pb.WriteResponse, error) {
 	err := s.rdb.Set(ctx, req.GetKey(), req.GetValue().GetValue(), 0).Err()
 	if err != nil {
-		log.Printf("remote err on Write: %v", err)
+		log.Printf("remote err on write: %v", err)
 	}
 	return &pb.WriteResponse{}, err
 }
