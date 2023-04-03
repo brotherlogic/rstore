@@ -25,6 +25,7 @@ type RStoreServiceClient interface {
 	Read(ctx context.Context, in *ReadRequest, opts ...grpc.CallOption) (*ReadResponse, error)
 	Write(ctx context.Context, in *WriteRequest, opts ...grpc.CallOption) (*WriteResponse, error)
 	GetKeys(ctx context.Context, in *GetKeysRequest, opts ...grpc.CallOption) (*GetKeysResponse, error)
+	Delete(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*DeleteResponse, error)
 }
 
 type rStoreServiceClient struct {
@@ -62,6 +63,15 @@ func (c *rStoreServiceClient) GetKeys(ctx context.Context, in *GetKeysRequest, o
 	return out, nil
 }
 
+func (c *rStoreServiceClient) Delete(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*DeleteResponse, error) {
+	out := new(DeleteResponse)
+	err := c.cc.Invoke(ctx, "/rstore.RStoreService/Delete", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // RStoreServiceServer is the server API for RStoreService service.
 // All implementations should embed UnimplementedRStoreServiceServer
 // for forward compatibility
@@ -69,6 +79,7 @@ type RStoreServiceServer interface {
 	Read(context.Context, *ReadRequest) (*ReadResponse, error)
 	Write(context.Context, *WriteRequest) (*WriteResponse, error)
 	GetKeys(context.Context, *GetKeysRequest) (*GetKeysResponse, error)
+	Delete(context.Context, *DeleteRequest) (*DeleteResponse, error)
 }
 
 // UnimplementedRStoreServiceServer should be embedded to have forward compatible implementations.
@@ -83,6 +94,9 @@ func (UnimplementedRStoreServiceServer) Write(context.Context, *WriteRequest) (*
 }
 func (UnimplementedRStoreServiceServer) GetKeys(context.Context, *GetKeysRequest) (*GetKeysResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetKeys not implemented")
+}
+func (UnimplementedRStoreServiceServer) Delete(context.Context, *DeleteRequest) (*DeleteResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Delete not implemented")
 }
 
 // UnsafeRStoreServiceServer may be embedded to opt out of forward compatibility for this service.
@@ -150,6 +164,24 @@ func _RStoreService_GetKeys_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _RStoreService_Delete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RStoreServiceServer).Delete(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/rstore.RStoreService/Delete",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RStoreServiceServer).Delete(ctx, req.(*DeleteRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // RStoreService_ServiceDesc is the grpc.ServiceDesc for RStoreService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -168,6 +200,10 @@ var RStoreService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetKeys",
 			Handler:    _RStoreService_GetKeys_Handler,
+		},
+		{
+			MethodName: "Delete",
+			Handler:    _RStoreService_Delete_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
