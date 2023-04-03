@@ -47,3 +47,11 @@ func (c *RStoreClient) GetKeys(ctx context.Context, req *pb.GetKeysRequest) (*pb
 
 	return c.gClient.GetKeys(ctx, req)
 }
+
+func (c *RStoreClient) Delete(ctx context.Context, req *pb.DeleteRequest) (*pb.DeleteResponse, error) {
+	if c.test {
+		return &pb.DeleteResponse{}, nil
+	}
+
+	return c.gClient.Delete(ctx, req)
+}

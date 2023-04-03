@@ -61,6 +61,10 @@ func (s *Server) GetKeys(ctx context.Context, req *pb.GetKeysRequest) (*pb.GetKe
 	return &pb.GetKeysResponse{Keys: keys}, nil
 }
 
+func (s *Server) Delete(ctx context.Context, req *pb.DeleteRequest) (*pb.DeleteResponse, error) {
+	return &pb.DeleteResponse{}, s.rdb.Del(ctx, req.GetKey()).Err()
+}
+
 func main() {
 	flag.Parse()
 

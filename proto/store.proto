@@ -32,9 +32,16 @@ message GetKeysResponse {
   repeated string keys = 1;
 }
 
+message DeleteRequest {
+  string key = 1;
+}
+
+message DeleteResponse {}
+
 
 service RStoreService {
   rpc Read (ReadRequest) returns (ReadResponse) {};
   rpc Write (WriteRequest) returns (WriteResponse) {};
   rpc GetKeys (GetKeysRequest) returns (GetKeysResponse) {};
+  rpc Delete (DeleteRequest) returns (DeleteResponse) {};
 }
