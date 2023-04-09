@@ -25,7 +25,7 @@ message WriteResponse {
 }
 
 message GetKeysRequest {
-  string suffix = 1;
+  string prefix = 1;
 }
 
 message GetKeysResponse {
