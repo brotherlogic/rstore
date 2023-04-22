@@ -13,7 +13,7 @@ type RStoreClient struct {
 }
 
 func GetClient() (*RStoreClient, error) {
-	conn, err := grpc.Dial("rstore.rstore:80", grpc.WithInsecure())
+	conn, err := grpc.Dial("rstore.rstore:8080", grpc.WithInsecure())
 	if err != nil {
 		return nil, err
 	}
