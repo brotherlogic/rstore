@@ -7,6 +7,7 @@ import (
 	"log"
 	"net"
 	"net/http"
+	"strings"
 	"time"
 
 	pb "github.com/brotherlogic/rstore/proto"
@@ -58,7 +59,14 @@ func (s *Server) GetKeys(ctx context.Context, req *pb.GetKeysRequest) (*pb.GetKe
 		return nil, err
 	}
 
-	return &pb.GetKeysResponse{Keys: keys}, nil
+	var akeys []string
+	for _, key := range keys {
+		if strings.Count(key, "/") == strings.Count(req.GetPrefix(), "/") {
+			akeys = append(akeys, key)
+		}
+	}
+
+	return &pb.GetKeysResponse{Keys: akeys}, nil
 }
 
 func (s *Server) Delete(ctx context.Context, req *pb.DeleteRequest) (*pb.DeleteResponse, error) {
