@@ -63,6 +63,8 @@ func (s *Server) GetKeys(ctx context.Context, req *pb.GetKeysRequest) (*pb.GetKe
 	for _, key := range keys {
 		if strings.Count(key, "/") == strings.Count(req.GetPrefix(), "/") {
 			akeys = append(akeys, key)
+		} else {
+			log.Printf("Dropping %v -> %v vs %v (%v)", key, strings.Count(key, "/"), strings.Count(req.GetPrefix(), "/"), req.GetPrefix())
 		}
 	}
 
