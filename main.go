@@ -33,9 +33,9 @@ type Server struct {
 }
 
 func (s *Server) Read(ctx context.Context, req *pb.ReadRequest) (*pb.ReadResponse, error) {
-	if val, ok := s.cache[req.GetKey()]; ok {
+	/*if val, ok := s.cache[req.GetKey()]; ok {
 		return &pb.ReadResponse{Value: &anypb.Any{Value: val}}, nil
-	}
+	}*/
 	cmd := s.rdb.Get(ctx, req.GetKey())
 	result, err := cmd.Bytes()
 
@@ -54,7 +54,7 @@ func (s *Server) Write(ctx context.Context, req *pb.WriteRequest) (*pb.WriteResp
 	if err != nil {
 		log.Printf("remote err on write: %v", err)
 	} else {
-		s.cache[req.GetKey()] = req.GetValue().GetValue()
+		//s.cache[req.GetKey()] = req.GetValue().GetValue()
 	}
 	return &pb.WriteResponse{}, err
 }
