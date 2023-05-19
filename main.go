@@ -28,10 +28,14 @@ var (
 )
 
 type Server struct {
-	rdb *redis.Client
+	rdb   *redis.Client
+	cache map[string][]byte
 }
 
 func (s *Server) Read(ctx context.Context, req *pb.ReadRequest) (*pb.ReadResponse, error) {
+	if val, ok := s.cache[req.GetKey()]; ok {
+		return &pb.ReadResponse{Value: &anypb.Any{Value: val}}, nil
+	}
 	cmd := s.rdb.Get(ctx, req.GetKey())
 	result, err := cmd.Bytes()
 
@@ -49,6 +53,8 @@ func (s *Server) Write(ctx context.Context, req *pb.WriteRequest) (*pb.WriteResp
 	err := s.rdb.Set(ctx, req.GetKey(), req.GetValue().GetValue(), 0).Err()
 	if err != nil {
 		log.Printf("remote err on write: %v", err)
+	} else {
+		s.cache[req.GetKey()] = req.GetValue().GetValue()
 	}
 	return &pb.WriteResponse{}, err
 }
@@ -78,7 +84,7 @@ func (s *Server) Delete(ctx context.Context, req *pb.DeleteRequest) (*pb.DeleteR
 func main() {
 	flag.Parse()
 
-	s := &Server{}
+	s := &Server{cache: make(map[string][]byte)}
 	s.rdb = redis.NewClient(&redis.Options{
 		Addr:     *redisAddress,
 		Password: "",
