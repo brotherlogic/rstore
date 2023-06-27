@@ -5,6 +5,8 @@ import (
 	"strings"
 
 	pb "github.com/brotherlogic/rstore/proto"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/anypb"
 )
 
@@ -12,8 +14,16 @@ type TestClient struct {
 	mapper map[string][]byte
 }
 
+func GetTestClient() RStoreClient {
+	return &TestClient{mapper: make(map[string][]byte)}
+}
+
 func (c *TestClient) Read(ctx context.Context, req *pb.ReadRequest) (*pb.ReadResponse, error) {
-	return &pb.ReadResponse{Value: &anypb.Any{Value: c.mapper[req.GetKey()]}}, nil
+	if val, ok := c.mapper[req.GetKey()]; ok {
+		return &pb.ReadResponse{Value: &anypb.Any{Value: val}}, nil
+	}
+
+	return nil, status.Errorf(codes.NotFound, "Unable to locate %v", req.GetKey())
 }
 
 func (c *TestClient) Write(ctx context.Context, req *pb.WriteRequest) (*pb.WriteResponse, error) {
