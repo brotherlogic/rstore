@@ -7,51 +7,37 @@ import (
 	"google.golang.org/grpc"
 )
 
-type RStoreClient struct {
-	test    bool
+type RStoreClient interface {
+	Read(ctx context.Context, req *pb.ReadRequest) (*pb.ReadResponse, error)
+	Write(ctx context.Context, req *pb.WriteRequest) (*pb.WriteResponse, error)
+	GetKeys(ctx context.Context, req *pb.GetKeysRequest) (*pb.GetKeysResponse, error)
+	Delete(ctx context.Context, req *pb.DeleteRequest) (*pb.DeleteResponse, error)
+}
+
+type rClient struct {
 	gClient pb.RStoreServiceClient
 }
 
-func GetClient() (*RStoreClient, error) {
+func GetClient() (RStoreClient, error) {
 	conn, err := grpc.Dial("rstore.rstore:8080", grpc.WithInsecure())
 	if err != nil {
 		return nil, err
 	}
-	return &RStoreClient{gClient: pb.NewRStoreServiceClient(conn)}, nil
+	return &rClient{gClient: pb.NewRStoreServiceClient(conn)}, nil
 }
 
-func GetTestClient() (*RStoreClient, error) {
-	return &RStoreClient{test: true}, nil
-}
-
-func (c *RStoreClient) Read(ctx context.Context, req *pb.ReadRequest) (*pb.ReadResponse, error) {
-	if c.test {
-		return &pb.ReadResponse{}, nil
-	}
-
+func (c *rClient) Read(ctx context.Context, req *pb.ReadRequest) (*pb.ReadResponse, error) {
 	return c.gClient.Read(ctx, req)
 }
 
-func (c *RStoreClient) Write(ctx context.Context, req *pb.WriteRequest) (*pb.WriteResponse, error) {
-	if c.test {
-		return &pb.WriteResponse{}, nil
-	}
-
+func (c *rClient) Write(ctx context.Context, req *pb.WriteRequest) (*pb.WriteResponse, error) {
 	return c.gClient.Write(ctx, req)
 }
 
-func (c *RStoreClient) GetKeys(ctx context.Context, req *pb.GetKeysRequest) (*pb.GetKeysResponse, error) {
-	if c.test {
-		return &pb.GetKeysResponse{}, nil
-	}
-
+func (c *rClient) GetKeys(ctx context.Context, req *pb.GetKeysRequest) (*pb.GetKeysResponse, error) {
 	return c.gClient.GetKeys(ctx, req)
 }
 
-func (c *RStoreClient) Delete(ctx context.Context, req *pb.DeleteRequest) (*pb.DeleteResponse, error) {
-	if c.test {
-		return &pb.DeleteResponse{}, nil
-	}
-
+func (c *rClient) Delete(ctx context.Context, req *pb.DeleteRequest) (*pb.DeleteResponse, error) {
 	return c.gClient.Delete(ctx, req)
 }
