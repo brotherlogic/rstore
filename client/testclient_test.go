@@ -53,3 +53,28 @@ func TestTestClient(t *testing.T) {
 		t.Errorf("Bad final read: %v, %v", val, err)
 	}
 }
+
+func TestGetKeysSuffix(t *testing.T) {
+	client := GetTestClient()
+
+	client.Write(context.Background(), &pb.WriteRequest{
+		Key:   "magicpocket",
+		Value: &anypb.Any{Value: []byte{1, 2, 3}},
+	})
+	client.Write(context.Background(), &pb.WriteRequest{
+		Key:   "magic",
+		Value: &anypb.Any{Value: []byte{1, 2, 3}},
+	})
+
+	keys, err := client.GetKeys(context.Background(), &pb.GetKeysRequest{
+		Prefix:      "magic",
+		AvoidSuffix: []string{"pocket"},
+	})
+	if err != nil {
+		t.Errorf("Bad return: %v", err)
+	}
+
+	if len(keys.GetKeys()) == 2 {
+		t.Errorf("Should only be one key: %v", keys)
+	}
+}
