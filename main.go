@@ -68,13 +68,21 @@ func (s *Server) GetKeys(ctx context.Context, req *pb.GetKeysRequest) (*pb.GetKe
 	var akeys []string
 	for _, key := range keys {
 		if strings.Count(key, "/") == strings.Count(req.GetPrefix(), "/") {
-			akeys = append(akeys, key)
+			valid := true
+			for _, suffix := range req.GetAvoidSuffix() {
+				if strings.HasSuffix(key, suffix) {
+					valid = false
+				}
+			}
+			if valid {
+				akeys = append(akeys, key)
+			}
 		} else {
-			log.Printf("Dropping %v -> %v vs %v (%v)", key, strings.Count(key, "/"), strings.Count(req.GetPrefix(), "/"), req.GetPrefix())
+			log.Printf("dropping %v -> %v vs %v (%v)", key, strings.Count(key, "/"), strings.Count(req.GetPrefix(), "/"), req.GetPrefix())
 		}
 	}
 
-	log.Printf("Returning %v items", len(akeys))
+	log.Printf("returning %v items", len(akeys))
 	return &pb.GetKeysResponse{Keys: akeys}, nil
 }
 
