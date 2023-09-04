@@ -62,7 +62,7 @@ func (s *Server) Write(ctx context.Context, req *pb.WriteRequest) (*pb.WriteResp
 func (s *Server) GetKeys(ctx context.Context, req *pb.GetKeysRequest) (*pb.GetKeysResponse, error) {
 	keys, err := s.rdb.Keys(ctx, fmt.Sprintf("%v*", req.GetPrefix())).Result()
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("database error reading keys %w", err)
 	}
 
 	var akeys []string
@@ -74,6 +74,7 @@ func (s *Server) GetKeys(ctx context.Context, req *pb.GetKeysRequest) (*pb.GetKe
 		}
 	}
 
+	log.Printf("Returning %v items", len(akeys))
 	return &pb.GetKeysResponse{Keys: akeys}, nil
 }
 
