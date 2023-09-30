@@ -26,6 +26,7 @@ message WriteResponse {
 
 message GetKeysRequest {
   string prefix = 1;
+  bool all_keys = 2;
 }
 
 message GetKeysResponse {
