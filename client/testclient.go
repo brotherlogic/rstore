@@ -35,7 +35,15 @@ func (c *TestClient) GetKeys(ctx context.Context, req *pb.GetKeysRequest) (*pb.G
 	var keys []string
 	for key := range c.mapper {
 		if strings.HasPrefix(key, req.GetPrefix()) {
-			keys = append(keys, key)
+			valid := true
+			for _, suffix := range req.GetAvoidSuffix() {
+				if strings.HasSuffix(key, suffix) {
+					valid = false
+				}
+			}
+			if valid {
+				keys = append(keys, key)
+			}
 		}
 	}
 	return &pb.GetKeysResponse{Keys: keys}, nil
