@@ -63,7 +63,7 @@ func (s *Server) GetKeys(ctx context.Context, req *pb.GetKeysRequest) (*pb.GetKe
 	t := time.Now()
 	keys, err := s.rdb.Keys(ctx, fmt.Sprintf("%v*", req.GetPrefix())).Result()
 	if err != nil {
-		log.Printf("Failed to read keys in %v", time.Since(t))
+		log.Printf("Failed to read keys (%v) in %v", req.GetPrefix(), time.Since(t))
 		return nil, fmt.Errorf("database error reading keys %w", err)
 	}
 
@@ -84,7 +84,7 @@ func (s *Server) GetKeys(ctx context.Context, req *pb.GetKeysRequest) (*pb.GetKe
 		}
 	}
 
-	log.Printf("returning %v items", len(akeys))
+	log.Printf("returning %v items (%v)", len(akeys), req.GetPrefix())
 	return &pb.GetKeysResponse{Keys: akeys}, nil
 }
 
