@@ -22,6 +22,7 @@ func main() {
 
 	client := pbrs.NewRStoreServiceClient(conn)
 
+<<<<<<< Updated upstream
 	result, err := client.Read(ctx, &pbrs.ReadRequest{
 		Key: "testkey",
 	})
@@ -38,4 +39,17 @@ func main() {
 		Key: "testkey",
 	})
 	log.Printf("Second Read: %v, %v", result, err)
+=======
+	res, err := client.Read(ctx, &pbrs.ReadRequest{Key: "testing"})
+	log.Printf("First: %v and %v", res, err)
+
+	data := &pbrs.ReadRequest{Key: "donkey"}
+	bytes, _ := proto.Marshal(data)
+
+	_, err = client.Write(ctx, &pbrs.WriteRequest{Key: "testing", Value: &anypb.Any{Value: bytes}})
+	log.Printf("Write: %v", err)
+
+	res, err = client.Read(ctx, &pbrs.ReadRequest{Key: "testing"})
+	log.Printf("Second: %v and %v", res, err)
+>>>>>>> Stashed changes
 }

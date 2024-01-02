@@ -60,8 +60,10 @@ func (s *Server) Write(ctx context.Context, req *pb.WriteRequest) (*pb.WriteResp
 }
 
 func (s *Server) GetKeys(ctx context.Context, req *pb.GetKeysRequest) (*pb.GetKeysResponse, error) {
+	t := time.Now()
 	keys, err := s.rdb.Keys(ctx, fmt.Sprintf("%v*", req.GetPrefix())).Result()
 	if err != nil {
+		log.Printf("Failed to read keys in %v", time.Since(t))
 		return nil, fmt.Errorf("database error reading keys %w", err)
 	}
 
