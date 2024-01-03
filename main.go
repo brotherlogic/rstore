@@ -63,30 +63,26 @@ func (s *Server) GetKeys(ctx context.Context, req *pb.GetKeysRequest) (*pb.GetKe
 	var akeys []string
 	var cursor uint64
 	t := time.Now()
-	for {
-		iter := s.rdb.Scan(ctx, cursor, fmt.Sprintf("%v*", req.GetPrefix()), 0).Iterator()
+	iter := s.rdb.Scan(ctx, cursor, fmt.Sprintf("%v*", req.GetPrefix()), 0).Iterator()
 
-		for iter.Next(ctx) {
-			key := iter.Val()
-			if req.GetAllKeys() || strings.Count(key, "/") == strings.Count(req.GetPrefix(), "/") {
-				valid := true
-				for _, suffix := range req.GetAvoidSuffix() {
-					if strings.HasSuffix(key, suffix) {
-						valid = false
-					}
+	for iter.Next(ctx) {
+		key := iter.Val()
+		if req.GetAllKeys() || strings.Count(key, "/") == strings.Count(req.GetPrefix(), "/") {
+			valid := true
+			for _, suffix := range req.GetAvoidSuffix() {
+				if strings.HasSuffix(key, suffix) {
+					valid = false
 				}
-				if valid {
-					akeys = append(akeys, key)
-				}
-			} else {
-				log.Printf("dropping %v -> %v vs %v (%v)", key, strings.Count(key, "/"), strings.Count(req.GetPrefix(), "/"), req.GetPrefix())
+			}
+			if valid {
+				akeys = append(akeys, key)
 			}
 		}
+	}
 
-		if err := iter.Err(); err != nil {
-			log.Printf("Failed to read keys (%v) in %v", req.GetPrefix(), time.Since(t))
-			return nil, fmt.Errorf("database error reading keys %w", err)
-		}
+	if err := iter.Err(); err != nil {
+		log.Printf("Failed to read keys (%v) in %v", req.GetPrefix(), time.Since(t))
+		return nil, fmt.Errorf("database error reading keys %w", err)
 	}
 
 	log.Printf("returning %v items (%v)", len(akeys), req.GetPrefix())
