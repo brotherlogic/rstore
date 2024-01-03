@@ -61,9 +61,11 @@ func (s *Server) Write(ctx context.Context, req *pb.WriteRequest) (*pb.WriteResp
 
 func (s *Server) GetKeys(ctx context.Context, req *pb.GetKeysRequest) (*pb.GetKeysResponse, error) {
 	var akeys []string
-	var cursor uint64
 	t := time.Now()
-	iter := s.rdb.Scan(ctx, cursor, fmt.Sprintf("%v*", req.GetPrefix()), 0).Iterator()
+	defer func(t time.Time) {
+		log.Printf("Completed %v in %v", req.GetPrefix(), time.Since(t))
+	}(t)
+	iter := s.rdb.Scan(ctx, 0, fmt.Sprintf("%v*", req.GetPrefix()), 0).Iterator()
 
 	for iter.Next(ctx) {
 		key := iter.Val()
