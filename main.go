@@ -65,7 +65,7 @@ func (s *Server) GetKeys(ctx context.Context, req *pb.GetKeysRequest) (*pb.GetKe
 	defer func(t time.Time) {
 		log.Printf("Completed %v in %v", req.GetPrefix(), time.Since(t))
 	}(t)
-	iter := s.rdb.Scan(ctx, 0, fmt.Sprintf("%v*", req.GetPrefix()), 100).Iterator()
+	iter := s.rdb.Scan(ctx, 0, fmt.Sprintf("%v*", req.GetPrefix()), 1000).Iterator()
 
 	for iter.Next(ctx) {
 		key := iter.Val()
