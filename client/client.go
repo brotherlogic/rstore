@@ -5,6 +5,7 @@ import (
 
 	pb "github.com/brotherlogic/rstore/proto"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
 type RStoreClient interface {
@@ -19,7 +20,9 @@ type rClient struct {
 }
 
 func GetClient() (RStoreClient, error) {
-	conn, err := grpc.Dial("rstore.rstore:8080", grpc.WithInsecure())
+	conn, err := grpc.Dial("rstore.rstore:8080",
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
+		grpc.WithDefaultCallOptions(grpc.MaxCallRecvMsgSize(100*1024*1024)))
 	if err != nil {
 		return nil, err
 	}
