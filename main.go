@@ -116,7 +116,11 @@ func main() {
 	if err != nil {
 		log.Fatalf("rstore failed to listen on the serving port %v: %v", *port, err)
 	}
-	gs := grpc.NewServer()
+	size := 1024 * 1024 * 50
+	gs := grpc.NewServer(
+		grpc.MaxSendMsgSize(size),
+		grpc.MaxRecvMsgSize(size),
+	)
 	pb.RegisterRStoreServiceServer(gs, s)
 	log.Printf("rstore is listening on %v", lis.Addr())
 
