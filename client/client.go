@@ -2,6 +2,7 @@ package rstore_client
 
 import (
 	"context"
+	"fmt"
 
 	pb "github.com/brotherlogic/rstore/proto"
 	"google.golang.org/grpc"
@@ -24,7 +25,7 @@ func GetClient() (RStoreClient, error) {
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithDefaultCallOptions(grpc.MaxCallRecvMsgSize(100*1024*1024)))
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("dial error on %v -> %w", "rstore.rstore:8080", err)
 	}
 	return &rClient{gClient: pb.NewRStoreServiceClient(conn)}, nil
 }

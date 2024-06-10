@@ -25,25 +25,25 @@ spec:
   selector:
     app: rstore
 ---
-apiVersion: monitoring.coreos.com/v1
-kind: ServiceMonitor
-metadata:
-  name: rstore
-  namespace: monitoring
-  labels:
-    release: kube-prometheus-stack
-spec:
-  endpoints:
-    - port: metrics
-      path: /metrics
-      interval: 30s
-  namespaceSelector:
-    matchNames:
-      - rstore
-  selector:
-    matchLabels:
-      app: rstore
----
+#apiVersion: monitoring.coreos.com/v1
+#kind: ServiceMonitor
+#metadata:
+#  name: rstore
+#  namespace: monitoring
+#  labels:
+#    release: kube-prometheus-stack
+#spec:
+#  endpoints:
+#    - port: metrics
+#      path: /metrics
+#      interval: 30s
+#  namespaceSelector:
+#    matchNames:
+#      - rstore
+#  selector:
+#    matchLabels:
+#      app: rstore
+#---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -61,7 +61,7 @@ spec:
     spec:
       containers:
       - name: restore
-        image: registry.brotherlogic-backend.com/brotherlogic/rstore:0.43.0 # {"$imagepolicy": "flux-system:rstore"}
+        image: registry.brotherlogic-backend.com/brotherlogic/rstore:0.46.0 # {"$imagepolicy": "flux-system:rstore"}
         ports:
         - containerPort: 8080
       imagePullSecrets:
