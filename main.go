@@ -12,23 +12,30 @@ import (
 
 	pb "github.com/brotherlogic/rstore/proto"
 
-	"github.com/brotherlogic/goserver/utils"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/redis/go-redis/v9"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/anypb"
+
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.mongodb.org/mongo-driver/mongo/readpref"
 )
 
 var (
 	port         = flag.Int("port", 8080, "The server port.")
 	metricsPort  = flag.Int("metrics_port", 8081, "Metrics port")
 	redisAddress = flag.String("redis", "redis-server.redis-server:6379", "Redis")
+
+	mongoAddress = flag.String("mongo", "mongodb://localhost:27017", "Connection String")
 )
 
 type Server struct {
 	rdb   *redis.Client
+	mongo *mongo.Client
+
 	cache map[string][]byte
 }
 
@@ -104,12 +111,31 @@ func main() {
 		Password: "",
 		DB:       0,
 	})
+	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
 
-	ctx, cancel := utils.ManualContext("redis", time.Minute)
 	err := s.rdb.Set(ctx, "key", "value", 0).Err()
 	if err != nil {
 		panic(err)
 	}
+
+	client, err := mongo.Connect(ctx, options.Client().ApplyURI(*mongoAddress))
+	defer func() {
+		ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
+		defer cancel()
+		if err = client.Disconnect(ctx); err != nil {
+			panic(err)
+		}
+	}()
+	if err != nil {
+		panic(err)
+	}
+	s.mongo = client
+
+	err = client.Ping(ctx, readpref.Primary())
+	if err != nil {
+		panic(err)
+	}
+
 	cancel()
 
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
