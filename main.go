@@ -133,7 +133,7 @@ func main() {
 
 	err = client.Ping(ctx, readpref.Primary())
 	if err != nil {
-		panic(err)
+		log.Printf("Unable to dial: %v", err)
 	}
 
 	cancel()
