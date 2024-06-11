@@ -10,7 +10,10 @@ import (
 	"strings"
 	"time"
 
+	ghbpb "github.com/brotherlogic/githubridge/proto"
 	pb "github.com/brotherlogic/rstore/proto"
+
+	ghbclient "github.com/brotherlogic/githubridge/client"
 
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/redis/go-redis/v9"
@@ -33,8 +36,9 @@ var (
 )
 
 type Server struct {
-	rdb   *redis.Client
-	mongo *mongo.Client
+	rdb     *redis.Client
+	mongo   *mongo.Client
+	gclient ghbclient.GithubridgeClient
 
 	cache map[string][]byte
 }
@@ -106,6 +110,12 @@ func main() {
 	flag.Parse()
 
 	s := &Server{cache: make(map[string][]byte)}
+	client, err := ghbclient.GetClientInternal()
+	if err != nil {
+		log.Fatalf("Unable to reach GHB")
+	}
+	s.gclient = client
+
 	s.rdb = redis.NewClient(&redis.Options{
 		Addr:     *redisAddress,
 		Password: "",
@@ -113,27 +123,35 @@ func main() {
 	})
 	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
 
-	err := s.rdb.Set(ctx, "key", "value", 0).Err()
+	err = s.rdb.Set(ctx, "key", "value", 0).Err()
 	if err != nil {
 		panic(err)
 	}
 
-	client, err := mongo.Connect(ctx, options.Client().ApplyURI(*mongoAddress))
+	mclient, err := mongo.Connect(ctx, options.Client().ApplyURI(*mongoAddress))
 	defer func() {
 		ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
 		defer cancel()
-		if err = client.Disconnect(ctx); err != nil {
+		if err = mclient.Disconnect(ctx); err != nil {
 			panic(err)
 		}
 	}()
 	if err != nil {
 		panic(err)
 	}
-	s.mongo = client
+	s.mongo = mclient
 
-	err = client.Ping(ctx, readpref.Primary())
+	err = mclient.Ping(ctx, readpref.Primary())
 	if err != nil {
-		log.Printf("Unable to dial: %v", err)
+		_, err = s.gclient.CreateIssue(ctx, &ghbpb.CreateIssueRequest{
+			User:  "brotherlogic",
+			Repo:  "rstore",
+			Title: "Mongo Ping Failure",
+			Body:  fmt.Sprintf("Error: %v", err),
+		})
+		if err != nil {
+			panic(err)
+		}
 	}
 
 	cancel()
