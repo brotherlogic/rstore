@@ -88,6 +88,8 @@ func main() {
 		panic(err)
 	}
 
+	s.redisClient = &redisClient{rdb: s.rdb}
+
 	mclient, err := mongo.Connect(ctx, options.Client().ApplyURI(*mongoAddress))
 	defer func() {
 		ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
