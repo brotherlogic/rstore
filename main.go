@@ -14,9 +14,12 @@ import (
 
 	ghbclient "github.com/brotherlogic/githubridge/client"
 
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promauto"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/redis/go-redis/v9"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/status"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -29,6 +32,12 @@ var (
 	redisAddress = flag.String("redis", "redis-server.redis-server:6379", "Redis")
 
 	mongoAddress = flag.String("mongo", "mongodb://localhost:27017", "Connection String")
+)
+
+var (
+	wCount = promauto.NewCounterVec(prometheus.CounterOpts{
+		Name: "rstore_wcount",
+	}, []string{"client", "code"})
 )
 
 type Server struct {
@@ -54,7 +63,8 @@ func (s *Server) Read(ctx context.Context, req *pb.ReadRequest) (*pb.ReadRespons
 
 func (s *Server) Write(ctx context.Context, req *pb.WriteRequest) (*pb.WriteResponse, error) {
 	// On the write path, do a fire or forget write into Mongo
-	s.mongoClient.Write(ctx, req)
+	_, merr := s.mongoClient.Write(ctx, req)
+	wCount.With(prometheus.Labels{"client": "mongo", "code": fmt.Sprintf("%v", status.Code(merr))}).Inc()
 	return s.redisClient.Write(ctx, req)
 }
 
@@ -122,7 +132,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("rstore failed to listen on the serving port %v: %v", *port, err)
 	}
-	size := 1024 * 1024 * 50
+	size := 1024 * 1024 * 1000
 	gs := grpc.NewServer(
 		grpc.MaxSendMsgSize(size),
 		grpc.MaxRecvMsgSize(size),
