@@ -27,4 +27,14 @@ func main() {
 	}
 
 	log.Printf("Found %v keys", len(keys.GetKeys()))
+
+	count := 0
+	for _, key := range keys.GetKeys() {
+		log.Printf("%v", key)
+		count++
+
+		if count > 20 {
+			return
+		}
+	}
 }

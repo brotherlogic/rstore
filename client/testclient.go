@@ -34,7 +34,6 @@ func (c *TestClient) Write(ctx context.Context, req *pb.WriteRequest) (*pb.Write
 
 func (c *TestClient) GetKeys(ctx context.Context, req *pb.GetKeysRequest) (*pb.GetKeysResponse, error) {
 	var keys []string
-	log.Printf("Reading %v", c.mapper)
 	for key := range c.mapper {
 		if strings.HasPrefix(key, req.GetPrefix()) {
 			valid := true
