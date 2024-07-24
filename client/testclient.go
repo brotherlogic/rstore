@@ -2,7 +2,6 @@ package rstore_client
 
 import (
 	"context"
-	"log"
 	"strings"
 
 	pb "github.com/brotherlogic/rstore/proto"
