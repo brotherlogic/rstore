@@ -58,10 +58,18 @@ type rstore interface {
 }
 
 func (s *Server) Read(ctx context.Context, req *pb.ReadRequest) (*pb.ReadResponse, error) {
+	t1 := time.Now()
+	defer func() {
+		log.Printf("Read %v in %v", req.GetKey(), time.Since(t1))
+	}()
 	return s.redisClient.Read(ctx, req)
 }
 
 func (s *Server) Write(ctx context.Context, req *pb.WriteRequest) (*pb.WriteResponse, error) {
+	t1 := time.Now()
+	defer func() {
+		log.Printf("Write %v in %v", req.GetKey(), time.Since(t1))
+	}()
 	// On the write path, do a fire or forget write into Mongo
 	_, merr := s.mongoClient.Write(ctx, req)
 	wCount.With(prometheus.Labels{"client": "mongo", "code": fmt.Sprintf("%v", status.Code(merr))}).Inc()
@@ -69,10 +77,18 @@ func (s *Server) Write(ctx context.Context, req *pb.WriteRequest) (*pb.WriteResp
 }
 
 func (s *Server) GetKeys(ctx context.Context, req *pb.GetKeysRequest) (*pb.GetKeysResponse, error) {
+	t1 := time.Now()
+	defer func() {
+		log.Printf("Got Keys %v in %v", req.GetPrefix(), time.Since(t1))
+	}()
 	return s.redisClient.GetKeys(ctx, req)
 }
 
 func (s *Server) Delete(ctx context.Context, req *pb.DeleteRequest) (*pb.DeleteResponse, error) {
+	t1 := time.Now()
+	defer func() {
+		log.Printf("Delete %v in %v", req.GetKey(), time.Since(t1))
+	}()
 	return s.redisClient.Delete(ctx, req)
 }
 
