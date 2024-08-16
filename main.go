@@ -98,6 +98,10 @@ func main() {
 		panic(err)
 	}
 
+	// print the db size
+	val, err := s.rdb.DBSize(context.Background()).Result()
+	log.Printf("Found %v, %v", val, err)
+
 	s.redisClient = &redisClient{rdb: s.rdb}
 
 	mclient, err := mongo.Connect(ctx, options.Client().ApplyURI(*mongoAddress))
