@@ -6,13 +6,12 @@ import (
 	"time"
 
 	pbrs "github.com/brotherlogic/rstore/proto"
-	"google.golang.org/protobuf/types/known/anypb"
 
 	"github.com/brotherlogic/goserver/utils"
 )
 
 func main() {
-	ctx, cancel := utils.ManualContext("restore-cli", time.Minute)
+	ctx, cancel := utils.ManualContext("restore-cli", time.Hour)
 	defer cancel()
 
 	conn, err := utils.LFDial(os.Args[1])
@@ -22,20 +21,9 @@ func main() {
 
 	client := pbrs.NewRStoreServiceClient(conn)
 
-	result, err := client.Read(ctx, &pbrs.ReadRequest{
-		Key: "testkey",
-	})
-	log.Printf("Initial Read: %v, %v", result, err)
-
-	data := "blah"
-	res, err := client.Write(ctx, &pbrs.WriteRequest{
-		Key:   "testkey",
-		Value: &anypb.Any{Value: []byte(data)},
-	})
-	log.Printf("Initial Write: %v, %v", res, err)
-
-	result, err = client.Read(ctx, &pbrs.ReadRequest{
-		Key: "testkey",
-	})
-	log.Printf("Second Read: %v, %v", result, err)
+result, err := client.GetKeys(ctx, &pbrs.GetKeysRequest{Prefix: "gramophile/taskqueue/"})
+if err != nil {
+log.Printf("Error: %v", err)
+}
+log.Printf("%v", result)
 }
