@@ -40,10 +40,19 @@ message DeleteRequest {
 
 message DeleteResponse {}
 
+message CountRequest {
+  string counter = 1;
+}
+
+message CountResponse {
+  int64 count = 1;
+}
+
 
 service RStoreService {
   rpc Read (ReadRequest) returns (ReadResponse) {};
   rpc Write (WriteRequest) returns (WriteResponse) {};
   rpc GetKeys (GetKeysRequest) returns (GetKeysResponse) {};
   rpc Delete (DeleteRequest) returns (DeleteResponse) {};
+  rpc Count(CountRequest) returns (CountResponse) {};
 }

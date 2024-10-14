@@ -80,3 +80,11 @@ func (r *redisClient) GetKeys(ctx context.Context, req *pb.GetKeysRequest) (*pb.
 func (r *redisClient) Delete(ctx context.Context, req *pb.DeleteRequest) (*pb.DeleteResponse, error) {
 	return &pb.DeleteResponse{}, r.rdb.Del(ctx, req.GetKey()).Err()
 }
+
+func (r *redisClient) Count(ctx context.Context, req *pb.CountRequest) (*pb.CountResponse, error) {
+	val, err := r.rdb.Incr(ctx, req.GetCounter()).Result()
+	if err != nil {
+		return nil, err
+	}
+	return &pb.CountResponse{Count: val}, nil
+}

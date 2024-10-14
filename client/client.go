@@ -14,6 +14,7 @@ type RStoreClient interface {
 	Write(ctx context.Context, req *pb.WriteRequest) (*pb.WriteResponse, error)
 	GetKeys(ctx context.Context, req *pb.GetKeysRequest) (*pb.GetKeysResponse, error)
 	Delete(ctx context.Context, req *pb.DeleteRequest) (*pb.DeleteResponse, error)
+	Count(ctx context.Context, req *pb.CountRequest) (*pb.CountResponse, error)
 }
 
 type rClient struct {
@@ -44,4 +45,8 @@ func (c *rClient) GetKeys(ctx context.Context, req *pb.GetKeysRequest) (*pb.GetK
 
 func (c *rClient) Delete(ctx context.Context, req *pb.DeleteRequest) (*pb.DeleteResponse, error) {
 	return c.gClient.Delete(ctx, req)
+}
+
+func (c *rClient) Count(ctx context.Context, req *pb.CountRequest) (*pb.CountResponse, error) {
+	return c.gClient.Count(ctx, req)
 }

@@ -55,6 +55,7 @@ type rstore interface {
 	Write(ctx context.Context, req *pb.WriteRequest) (*pb.WriteResponse, error)
 	GetKeys(ctx context.Context, req *pb.GetKeysRequest) (*pb.GetKeysResponse, error)
 	Delete(ctx context.Context, req *pb.DeleteRequest) (*pb.DeleteResponse, error)
+	Count(ctx context.Context, req *pb.CountRequest) (*pb.CountResponse, error)
 }
 
 func (s *Server) Read(ctx context.Context, req *pb.ReadRequest) (*pb.ReadResponse, error) {
@@ -90,6 +91,10 @@ func (s *Server) Delete(ctx context.Context, req *pb.DeleteRequest) (*pb.DeleteR
 		log.Printf("Delete %v in %v", req.GetKey(), time.Since(t1))
 	}()
 	return s.redisClient.Delete(ctx, req)
+}
+
+func (s *Server) Count(ctx context.Context, req *pb.CountRequest) (*pb.CountResponse, error) {
+	return s.redisClient.Count(ctx, req)
 }
 
 func main() {
