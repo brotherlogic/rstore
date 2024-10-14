@@ -11,7 +11,8 @@ import (
 )
 
 type TestClient struct {
-	mapper map[string][]byte
+	mapper  map[string][]byte
+	counter int64
 }
 
 func GetTestClient() RStoreClient {
@@ -52,4 +53,10 @@ func (c *TestClient) GetKeys(ctx context.Context, req *pb.GetKeysRequest) (*pb.G
 func (c *TestClient) Delete(ctx context.Context, req *pb.DeleteRequest) (*pb.DeleteResponse, error) {
 	delete(c.mapper, req.GetKey())
 	return &pb.DeleteResponse{}, nil
+}
+
+func (c *TestClient) Count(ctx context.Context, req *pb.CountRequest) (*pb.CountResponse, error) {
+	val := c.counter
+	c.counter++
+	return &pb.CountResponse{Count: val}, nil
 }
