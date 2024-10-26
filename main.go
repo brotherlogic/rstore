@@ -38,6 +38,10 @@ var (
 	wCount = promauto.NewCounterVec(prometheus.CounterOpts{
 		Name: "rstore_wcount",
 	}, []string{"client", "code"})
+
+	rCount = promauto.NewCounterVec(prometheus.CounterOpts{
+		Name: "rstore_rcount",
+	}, []string{"code"})
 )
 
 type Server struct {
@@ -63,7 +67,9 @@ func (s *Server) Read(ctx context.Context, req *pb.ReadRequest) (*pb.ReadRespons
 	defer func() {
 		log.Printf("Read %v in %v", req.GetKey(), time.Since(t1))
 	}()
-	return s.redisClient.Read(ctx, req)
+	r, err := s.redisClient.Read(ctx, req)
+	rCount.With(prometheus.Labels{"code": fmt.Sprintf("%v", status.Code(err))}).Inc()
+	return r, err
 }
 
 func (s *Server) Write(ctx context.Context, req *pb.WriteRequest) (*pb.WriteResponse, error) {
