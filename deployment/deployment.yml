@@ -59,7 +59,6 @@ spec:
       labels:
         app: rstore
     spec:
-      nodeName: klust2
       containers:
         - name: restore
           image: registry.brotherlogic-backend.com/brotherlogic/rstore:0.60.0 # {"$imagepolicy": "flux-system:rstore"}
