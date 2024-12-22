@@ -64,13 +64,5 @@ spec:
           image: registry.brotherlogic-backend.com/brotherlogic/rstore:0.60.0 # {"$imagepolicy": "flux-system:rstore"}
           ports:
             - containerPort: 8080
-          args: ["--mongo=$(CONNECTION_STRING)"]
-          env:
-            - name: CONNECTION_STRING
-              valueFrom:
-                secretKeyRef:
-                  name: mongodb-admin-madmin
-                  namespace: mongo
-                  key: connectionString.standardSrv
       imagePullSecrets:
         - name: regcred
