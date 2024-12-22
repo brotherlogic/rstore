@@ -9,7 +9,6 @@ import (
 	"net/http"
 	"time"
 
-	ghbpb "github.com/brotherlogic/githubridge/proto"
 	pb "github.com/brotherlogic/rstore/proto"
 
 	ghbclient "github.com/brotherlogic/githubridge/client"
@@ -20,10 +19,6 @@ import (
 	"github.com/redis/go-redis/v9"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/status"
-
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
-	"go.mongodb.org/mongo-driver/mongo/readpref"
 )
 
 var (
@@ -131,34 +126,6 @@ func main() {
 
 	s.redisClient = &redisClient{rdb: s.rdb}
 
-	mclient, err := mongo.Connect(ctx, options.Client().ApplyURI(*mongoAddress))
-	defer func() {
-		ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
-		defer cancel()
-		if err = mclient.Disconnect(ctx); err != nil {
-			panic(err)
-		}
-	}()
-	if err != nil {
-		panic(err)
-	}
-	s.mongoClient = &mongoClient{client: mclient}
-
-	err = mclient.Ping(ctx, readpref.Primary())
-	if err != nil {
-		_, err = s.gclient.CreateIssue(ctx, &ghbpb.CreateIssueRequest{
-			User:  "brotherlogic",
-			Repo:  "rstore",
-			Title: "Mongo Ping Failure",
-			Body:  fmt.Sprintf("Error: %v", err),
-		})
-		if err != nil {
-			panic(err)
-		}
-	}
-
-	cancel()
-
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
 	if err != nil {
 		log.Fatalf("rstore failed to listen on the serving port %v: %v", *port, err)
@@ -170,6 +137,8 @@ func main() {
 	)
 	pb.RegisterRStoreServiceServer(gs, s)
 	log.Printf("rstore is listening on %v", lis.Addr())
+
+	cancel()
 
 	// Setup prometheus export
 	http.Handle("/metrics", promhttp.Handler())
