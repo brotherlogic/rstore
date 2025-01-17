@@ -51,7 +51,7 @@ func (r *redisClient) GetKeys(ctx context.Context, req *pb.GetKeysRequest) (*pb.
 	defer func(t time.Time) {
 		log.Printf("Completed %v in %v", req.GetPrefix(), time.Since(t))
 	}(t)
-	iter := r.rdb.Scan(ctx, 0, fmt.Sprintf("%v*", req.GetPrefix()), 100).Iterator()
+	iter := r.rdb.Scan(ctx, 0, fmt.Sprintf("%v*", req.GetPrefix()), 10000).Iterator()
 
 	count := 0
 	for iter.Next(ctx) {
