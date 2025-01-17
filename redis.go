@@ -75,7 +75,7 @@ func (r *redisClient) GetKeys(ctx context.Context, req *pb.GetKeysRequest) (*pb.
 		return nil, fmt.Errorf("database error reading keys %w", err)
 	}
 
-	log.Printf("returning %v items (%v) filtered from %v", len(akeys), req.GetPrefix(), count)
+	log.Printf("returning %v items (%v) filtered from %v (took %v)", len(akeys), req.GetPrefix(), count, time.Since(t))
 	return &pb.GetKeysResponse{Keys: akeys}, nil
 }
 
