@@ -53,7 +53,9 @@ func (r *redisClient) GetKeys(ctx context.Context, req *pb.GetKeysRequest) (*pb.
 	}(t)
 	iter := r.rdb.Scan(ctx, 0, fmt.Sprintf("%v*", req.GetPrefix()), 1000).Iterator()
 
+	count := 0
 	for iter.Next(ctx) {
+		count++
 		key := iter.Val()
 		if req.GetAllKeys() || strings.Count(key, "/") == strings.Count(req.GetPrefix(), "/") {
 			valid := true
@@ -73,7 +75,7 @@ func (r *redisClient) GetKeys(ctx context.Context, req *pb.GetKeysRequest) (*pb.
 		return nil, fmt.Errorf("database error reading keys %w", err)
 	}
 
-	log.Printf("returning %v items (%v)", len(akeys), req.GetPrefix())
+	log.Printf("returning %v items (%v) filtered from %v (took %v)", len(akeys), req.GetPrefix(), count, time.Since(t))
 	return &pb.GetKeysResponse{Keys: akeys}, nil
 }
 
