@@ -6,7 +6,7 @@ require (
 	github.com/brotherlogic/githubridge v0.2801.0
 	github.com/brotherlogic/goserver v0.0.0-20240303220030-80da220f0393
 	github.com/prometheus/client_golang v1.19.1
-	github.com/redis/go-redis/v9 v9.5.3
+	github.com/redis/go-redis/v9 v9.5.5
 	go.mongodb.org/mongo-driver v1.15.0
 	google.golang.org/grpc v1.64.0
 	google.golang.org/protobuf v1.34.2
