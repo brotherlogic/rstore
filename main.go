@@ -130,7 +130,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("rstore failed to listen on the serving port %v: %v", *port, err)
 	}
-	size := 1024 * 1024 * 1000
+	size := 1024 * 1024 * 2000
 	gs := grpc.NewServer(
 		grpc.MaxSendMsgSize(size),
 		grpc.MaxRecvMsgSize(size),
