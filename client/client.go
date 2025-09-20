@@ -24,7 +24,7 @@ type rClient struct {
 func GetClient() (RStoreClient, error) {
 	conn, err := grpc.Dial("rstore.rstore:8080",
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
-		grpc.WithDefaultCallOptions(grpc.MaxCallRecvMsgSize(2000*1024*1024)))
+		grpc.WithDefaultCallOptions(grpc.MaxCallRecvMsgSize(2000*1024*1024), grpc.MaxCallSendMsgSize(2000*1024*1024)))
 	if err != nil {
 		return nil, fmt.Errorf("dial error on %v -> %w", "rstore.rstore:8080", err)
 	}
